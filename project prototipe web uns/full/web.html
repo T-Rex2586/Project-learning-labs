@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNS Website</title>
+    <style>
+        :root {
+            --background-color: #f0f0f0;
+            --text-color: #333;
+            --primary-color: #00539C;
+            --secondary-color: #ffd700;
+            --transition-speed: 0.3s;
+        }
+
+        [data-theme="dark"] {
+            --background-color: #222;
+            --text-color: #ddd;
+            --primary-color: #0A74DA;
+            --secondary-color: #FFA500;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            transition: background-color var(--transition-speed), color var(--transition-speed);
+            scroll-behavior: smooth;
+        }
+
+        .container {
+            display: grid;
+            grid-template-rows: auto 1fr auto;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 20px;
+            position: relative;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            z-index: 500;
+        }
+
+        header img {
+            height: 50px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.5em;
+        }
+
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+        }
+
+        nav ul li {
+            margin: 0 10px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color var(--transition-speed);
+        }
+
+        nav ul li a:hover {
+            color: var(--secondary-color);
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .hamburger div {
+            width: 25px;
+            height: 3px;
+            background-color: white;
+            margin: 4px;
+            transition: transform 0.3s;
+        }
+
+        @media (max-width: 768px) {
+            nav ul {
+                display: none;
+                flex-direction: column;
+                background-color: var(--primary-color);
+                position: absolute;
+                top: 60px;
+                right: 0;
+                width: 100%;
+            }
+
+            nav ul.active {
+                display: flex;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+            opacity: 0;
+            animation: fadeIn 0.5s forwards;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        footer {
+            background-color: var(--primary-color);
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+        }
+
+        #home img {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s forwards;
+        }
+
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        #home img:nth-child(1) {
+            animation-delay: 0.2s;
+        }
+
+        #home img:nth-child(2) {
+            animation-delay: 0.4s;
+        }
+
+        #home img:nth-child(3) {
+            animation-delay: 0.6s;
+        }
+
+        .carousel {
+            position: relative;
+        }
+
+        .carousel-inner {
+            display: flex;
+            overflow: hidden;
+            width: 100%;
+            transition: transform 0.5s ease;
+        }
+
+        .carousel-buttons {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .carousel-button {
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 10px;
+            cursor: pointer;
+            border: none;
+            border-radius: 50%;
+        }
+
+        .carousel-button:hover {
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        .accordion {
+            margin: 20px 0;
+        }
+
+        .accordion-item {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin: 8px 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .accordion-title {
+            padding: 15px;
+            background: var(--primary-color);
+            color: white;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .accordion-title:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .accordion-icon {
+            transition: transform 0.3s;
+        }
+
+        .accordion-content {
+            display: none;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-top: 1px solid #ddd;
+            color: var(--text-color);
+            font-size: 0.95em;
+        }
+
+        .accordion-content.active {
+            display: block;
+        }
+
+        .accordion-title[aria-expanded="true"] .accordion-icon {
+            transform: rotate(45deg);
+        }
+
+        form {
+            display: grid;
+            gap: 15px;
+            margin-top: 20px;
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+
+        form label {
+            font-weight: bold;
+            color: var(--text-color);
+        }
+
+        form input, form textarea {
+            padding: 10px;
+            font-size: 1em;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 100%;
+        }
+
+        form button {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px 20px;
+            font-size: 1em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        form button:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        .modal-content button {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .modal-content button:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .popup-modal {
+            background-color: rgba(0, 0, 0, 0.5);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .popup-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            max-width: 400px;
+            width: 80%;
+        }
+        
+        .popup-content button {
+            background-color: #00539C;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .popup-content button:hover {
+            background-color: #FFD700;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <img src="logo-uns.png" alt="UNS Logo" loading="lazy">
+            <h1>Universitas Sebelas Maret (UNS)</h1>
+            <nav>
+                <ul id="nav-list">
+                    <li><a href="#" onclick="showPage('home')">Home</a></li>
+                    <li><a href="#" onclick="showPage('about')">About UNS</a></li>
+                    <li><a href="#" onclick="showPage('faq')">FAQ</a></li>
+                    <li><a href="#" onclick="showPage('feedback')">Feedback</a></li>
+                </ul>
+                <div class="hamburger" onclick="toggleMenu()">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+            </nav>
+            <span class="theme-toggle" onclick="toggleTheme()">🌙</span>
+        </header>
+
+        <main>
+            <section id="home" class="page active">
+                <h2>Welcome to UNS</h2>
+                <p>Explore one of Indonesia's top universities, known for its excellence in academics, research, and community engagement.</p>
+                <div class="carousel">
+                    <div id="carousel-inner" class="carousel-inner">
+                        <img src="uns-campus1.jpg" alt="Campus Image 1" style="width: 80%; max-width: 400px;" loading="lazy">
+                        <img src="uns-campus2.jpeg" alt="Campus Image 2" style="width: 80%; max-width: 400px;" loading="lazy">
+                        <img src="uns-campus3.jpg" alt="Campus Image 3" style="width: 80%; max-width: 400px;" loading="lazy">
+                    </div>
+                    <div class="carousel-buttons">
+                        <button class="carousel-button" onclick="prevSlide()">❮</button>
+                        <button class="carousel-button" onclick="nextSlide()">❯</button>
+                    </div>
+                </div>
+                <button onclick="openModal()">Learn More</button>
+            </section>
+
+            <section id="about" class="page">
+                <h2>About UNS</h2>
+                <p>Learn more about the history, mission, and programs offered at Universitas Sebelas Maret.</p>
+                <img src="uns-campus.jpg" alt="Campus Image 3" style="width: 80%; max-width: 400px;" loading="lazy">
+            </section>
+
+            <section id="faq" class="page">
+                <h2>Frequently Asked Questions</h2>
+                <div class="accordion">
+                    <div class="accordion-item">
+                        <div class="accordion-title" onclick="toggleAccordion(this)" aria-expanded="false">
+                            <span>What is the admission process?</span>
+                            <span class="accordion-icon">+</span>
+                        </div>
+                        <div class="accordion-content">
+                            <p>The admission process includes an online application followed by an entrance exam...</p>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <div class="accordion-title" onclick="toggleAccordion(this)" aria-expanded="false">
+                            <span>What programs are offered?</span>
+                            <span class="accordion-icon">+</span>
+                        </div>
+                        <div class="accordion-content">
+                            <p>UNS offers undergraduate and graduate programs across a wide range of disciplines...</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="feedback" class="page">
+                <h2>Provide Feedback</h2>
+                <form id="feedback-form">
+                    <label for="name">Your Name:</label>
+                    <input type="text" id="name" name="name" required>
+            
+                    <label for="email">Your Email:</label>
+                    <input type="email" id="email" name="email" required>
+            
+                    <label for="message">Your Feedback:</label>
+                    <textarea id="message" name="message" required></textarea>
+            
+                    <button type="submit">Submit Feedback</button>
+                </form>
+            
+                <div id="popup-modal" class="popup-modal" style="display:none;">
+                    <div class="popup-content">
+                        <p>Thank you for your feedback!</p>
+                        <button onclick="closePopup()">Close</button>
+                    </div>
+                </div>
+            </section>
+            
+        </main>
+
+        <footer>
+            <p>&copy; Learning Labs 2024 | L0224025 | Theodosius Rexy Mahardika</p>
+            <button onclick="scrollToTop()">Back to Top</button>
+        </footer>
+    </div>
+
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <h2>Learn More About UNS</h2>
+            <p>We are dedicated to excellence in teaching, research, and community service...</p>
+            <button onclick="closeModal()">Close</button>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.carousel-inner img');
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % slides.length;
+            updateSlide();
+        }
+
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+            updateSlide();
+        }
+
+        function updateSlide() {
+            const carousel = document.getElementById('carousel-inner');
+            carousel.style.transform = `translateX(-${currentSlide * 100}%)`;
+        }
+
+        function showPage(pageId) {
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => page.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+        }
+
+        function toggleMenu() {
+            document.getElementById('nav-list').classList.toggle('active');
+        }
+
+        function toggleTheme() {
+            const currentTheme = document.body.getAttribute('data-theme');
+            document.body.setAttribute('data-theme', currentTheme === 'dark' ? 'light' : 'dark');
+        }
+
+        function toggleAccordion(title) {
+            const content = title.nextElementSibling;
+            const icon = title.querySelector('.accordion-icon');
+            content.classList.toggle('active');
+            title.setAttribute('aria-expanded', content.classList.contains('active'));
+            icon.textContent = content.classList.contains('active') ? '−' : '+';
+        }
+
+        const form = document.getElementById('feedback-form');
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+            document.getElementById('confirmationModal').style.display = 'block';
+            form.reset();
+        });
+
+        function closeConfirmationModal() {
+            document.getElementById('confirmationModal').style.display = 'none';
+        }
+
+        function openModal() {
+            document.getElementById('modal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        document.getElementById('feedback-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const userName = document.getElementById('name').value;  
+            showPopup(userName);  
+        });
+        
+        function showPopup(userName) {
+            const popupMessage = `Thank you for your feedback, ${userName}!`;  
+            document.getElementById('popup-modal').style.display = 'flex';
+            document.getElementById('popup-modal').querySelector('p').textContent = popupMessage;  
+            }
+            
+            function closePopup() {
+                document.getElementById('popup-modal').style.display = 'none';
+                document.getElementById('feedback-form').reset();
+            }
+
+    </script>
+
+</body>
+</html>
